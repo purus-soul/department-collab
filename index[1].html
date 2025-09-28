@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Collab Website</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav>
+    <button id="btn-show-login">Login</button>
+    <button id="btn-show-register">Register</button>
+    <button id="btn-logout" class="hidden">Logout</button>
+  </nav>
+
+  <main>
+    <section id="auth-forms">
+      <div id="login-form" class="hidden">
+        <h2>Login</h2>
+        <input id="login-email" placeholder="Email"><br>
+        <input id="login-pass" type="password" placeholder="Password"><br>
+        <button id="btn-login">Login</button>
+      </div>
+
+      <div id="register-form" class="hidden">
+        <h2>Register</h2>
+        <input id="reg-name" placeholder="Name"><br>
+        <input id="reg-email" placeholder="Email"><br>
+        <input id="reg-dept" placeholder="Department"><br>
+        <input id="reg-skills" placeholder="Skills (comma separated)"><br>
+        <input id="reg-pass" type="password" placeholder="Password"><br>
+        <button id="btn-register">Register</button>
+      </div>
+    </section>
+
+    <section id="create-panel" class="hidden">
+      <h2>Create Project</h2>
+      <input id="post-title" placeholder="Project Title"><br>
+      <textarea id="post-desc" placeholder="Description"></textarea><br>
+      <input id="post-skills" placeholder="Skills Needed (comma separated)"><br>
+      <button id="btn-create">Create</button>
+    </section>
+
+    <section>
+      <h2>Available Projects</h2>
+      <div id="posts-list"></div>
+    </section>
+
+    <section>
+      <h2>Profile</h2>
+      <div id="profile-info"></div>
+      <h3>Your Projects</h3>
+      <div id="profile-posts"></div>
+      <h3>Joined Projects</h3>
+      <div id="profile-joined"></div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
