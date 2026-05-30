@@ -230,3 +230,14 @@ function updateAuthUI(user) {
 function escapeHtml(str) {
   return String(str || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 }
+// -------------------- Toggle Password Visibility --------------------
+document.getElementById("toggle-pass").onclick = () => {
+  const passInput = document.getElementById("reg-pass");
+  if (passInput.type === "password") {
+    passInput.type = "text";
+    document.getElementById("toggle-pass").textContent = "🙈";
+  } else {
+    passInput.type = "password";
+    document.getElementById("toggle-pass").textContent = "👁️";
+  }
+};
