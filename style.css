@@ -46,3 +46,17 @@ section {
   border-radius: 4px;
   font-size: 12px;
 }
+.filter-btn {
+  padding: 6px 14px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  background: white;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.active-filter {
+  background: #3498db;
+  color: white;
+  border-color: #3498db;
+}
