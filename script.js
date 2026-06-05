@@ -17,13 +17,27 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// -------------------- Toast Notification --------------------
+// -------------------- Toast --------------------
 function showToast(msg, type = "default") {
   const toast = document.getElementById("toast");
   toast.textContent = msg;
   toast.className = "show " + type;
   setTimeout(() => { toast.className = "hidden"; }, 3000);
 }
+
+// -------------------- Scroll To Top --------------------
+const scrollBtn = document.getElementById("scroll-top");
+window.addEventListener("scroll", () => {
+  scrollBtn.classList.toggle("visible", window.scrollY > 300);
+});
+scrollBtn.onclick = () => window.scrollTo({ top: 0, behavior: "smooth" });
+
+// -------------------- Search --------------------
+let searchQuery = "";
+document.getElementById("search-input").addEventListener("input", async (e) => {
+  searchQuery = e.target.value.toLowerCase().trim();
+  await renderPosts(auth.currentUser);
+});
 
 // -------------------- Department Filter --------------------
 const DEPARTMENTS = ["All", "ECE", "CSE", "EEE", "Mech", "Bio Medical", "BBL", "IT", "Arts"];
@@ -61,7 +75,6 @@ document.getElementById("auth-close-btn").onclick = closeAuthModal;
 document.getElementById("auth-overlay").onclick = (e) => {
   if (e.target === document.getElementById("auth-overlay")) closeAuthModal();
 };
-
 document.getElementById("switch-to-register").onclick = (e) => { e.preventDefault(); openAuthModal("register"); };
 document.getElementById("switch-to-login").onclick = (e) => { e.preventDefault(); openAuthModal("login"); };
 
@@ -95,10 +108,8 @@ document.getElementById("btn-register").onclick = async () => {
   const dept = document.getElementById("reg-dept").value;
   const skills = document.getElementById("reg-skills").value.split(",").map(s => s.trim()).filter(Boolean);
   const pass = document.getElementById("reg-pass").value.trim();
-
   if (!name || !email || !dept || !pass) return showToast("Please fill all fields.", "error");
   if (pass.length < 6) return showToast("Password must be at least 6 characters.", "error");
-
   try {
     const userCred = await createUserWithEmailAndPassword(auth, email, pass);
     await setDoc(doc(db, "users", userCred.user.uid), { name, email, department: dept, skills });
@@ -132,12 +143,30 @@ onAuthStateChanged(auth, async (user) => {
   await updateStats();
 });
 
-// -------------------- Update Stats --------------------
+// -------------------- Stats --------------------
 async function updateStats() {
   const postsSnap = await getDocs(collection(db, "posts"));
   const usersSnap = await getDocs(collection(db, "users"));
-  document.getElementById("stat-projects").textContent = postsSnap.size;
-  document.getElementById("stat-members").textContent = usersSnap.size;
+  animateCount("stat-projects", postsSnap.size);
+  animateCount("stat-members", usersSnap.size);
+}
+
+function animateCount(id, target) {
+  const el = document.getElementById(id);
+  let current = 0;
+  const step = Math.ceil(target / 30);
+  const timer = setInterval(() => {
+    current = Math.min(current + step, target);
+    el.textContent = current;
+    if (current >= target) clearInterval(timer);
+  }, 40);
+}
+
+// -------------------- Format Date --------------------
+function formatDate(ts) {
+  if (!ts) return "";
+  const d = new Date(ts);
+  return d.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
 }
 
 // -------------------- Create Project --------------------
@@ -146,13 +175,10 @@ document.getElementById("btn-create").onclick = async () => {
   const desc = document.getElementById("post-desc").value.trim();
   const skillsNeeded = document.getElementById("post-skills").value.split(",").map(s => s.trim()).filter(Boolean);
   const user = auth.currentUser;
-
   if (!user) return showToast("Please login first.", "error");
   if (!title || !desc) return showToast("Please fill title and description.", "error");
-
   const userSnap = await getDoc(doc(db, "users", user.uid));
   const userData = userSnap.data();
-
   await addDoc(collection(db, "posts"), {
     title, description: desc, skillsNeeded,
     createdByUid: user.uid,
@@ -161,11 +187,9 @@ document.getElementById("btn-create").onclick = async () => {
     joined: [],
     createdAt: Date.now()
   });
-
   document.getElementById("post-title").value = "";
   document.getElementById("post-desc").value = "";
   document.getElementById("post-skills").value = "";
-
   showToast("Project posted! 🚀", "success");
   await renderPosts(auth.currentUser);
   await updateStats();
@@ -191,17 +215,25 @@ async function renderPosts(user) {
   let posts = [];
   snapshot.forEach(docSnap => posts.push({ ...docSnap.data(), id: docSnap.id }));
 
-  // Sort by newest first
   posts.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
 
   if (activeFilter !== "All") {
     posts = posts.filter(p => (p.createdByDept || "").toLowerCase() === activeFilter.toLowerCase());
   }
 
+  if (searchQuery) {
+    posts = posts.filter(p =>
+      p.title.toLowerCase().includes(searchQuery) ||
+      (p.description || "").toLowerCase().includes(searchQuery) ||
+      (p.skillsNeeded || []).some(s => s.toLowerCase().includes(searchQuery)) ||
+      (p.createdByName || "").toLowerCase().includes(searchQuery)
+    );
+  }
+
   postsList.innerHTML = "";
 
   if (posts.length === 0) {
-    postsList.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div><p>No projects found for this department.</p></div>`;
+    postsList.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div><p>${searchQuery ? "No projects match your search." : "No projects found for this department."}</p></div>`;
     return;
   }
 
@@ -212,6 +244,7 @@ async function renderPosts(user) {
     const isOwner = user && p.createdByUid === user.uid;
     const shortDesc = (p.description || "").slice(0, 160);
     const hasMore = (p.description || "").length > 160;
+    const dateStr = formatDate(p.createdAt);
 
     const div = document.createElement("div");
     div.className = "post-card";
@@ -219,24 +252,32 @@ async function renderPosts(user) {
       <div class="post-card-header">
         <div>
           <div class="post-card-title">${escapeHtml(p.title)}</div>
-          <div class="post-card-by">by ${escapeHtml(p.createdByName)}</div>
+          <div class="post-card-by">by ${escapeHtml(p.createdByName)} ${dateStr ? `<span class="post-date">· ${dateStr}</span>` : ""}</div>
         </div>
         <span class="post-card-dept">${escapeHtml(p.createdByDept || "")}</span>
       </div>
       <div class="post-card-desc">${escapeHtml(shortDesc)}${hasMore ? `<span class="read-more"> ...read more</span>` : ""}</div>
       <div class="tags">${(p.skillsNeeded || []).map(s => `<span class="tag">${escapeHtml(s)}</span>`).join("")}</div>
       <div class="post-card-footer">
-        <button class="btn btn-sm ${isOwner ? "btn-ghost" : isJoined ? "btn-success" : "btn-primary"} join-btn"
-          ${!user || isOwner ? "disabled" : ""}>
-          ${isOwner ? "Your Project" : isJoined ? "✅ Joined" : "Join Project"}
-        </button>
+        ${!user
+          ? `<button class="btn btn-sm btn-primary login-to-join">🔒 Login to Join</button>`
+          : `<button class="btn btn-sm ${isOwner ? "btn-ghost" : isJoined ? "btn-success" : "btn-primary"} join-btn"
+              ${isOwner ? "disabled" : ""}>
+              ${isOwner ? "Your Project" : isJoined ? "✅ Joined" : "Join Project"}
+            </button>`
+        }
         <span class="joined-count">👥 ${joinedCount} member${joinedCount !== 1 ? "s" : ""}</span>
         ${isOwner ? `<button class="btn btn-sm btn-danger delete-btn" style="margin-left:auto">🗑️ Delete</button>` : ""}
       </div>`;
 
     div.querySelector(".post-card-title").onclick = () => openDetail(pid);
     if (div.querySelector(".read-more")) div.querySelector(".read-more").onclick = () => openDetail(pid);
-    if (!isOwner && user) div.querySelector(".join-btn").onclick = () => toggleJoin(pid, user.uid);
+    if (!user && div.querySelector(".login-to-join")) {
+      div.querySelector(".login-to-join").onclick = () => openAuthModal("login");
+    }
+    if (user && !isOwner && div.querySelector(".join-btn")) {
+      div.querySelector(".join-btn").onclick = () => toggleJoin(pid, user.uid);
+    }
     if (isOwner) div.querySelector(".delete-btn").onclick = () => deletePost(pid);
 
     postsList.appendChild(div);
@@ -285,7 +326,7 @@ async function openDetail(postId) {
   document.getElementById("detail-body").innerHTML = `
     <span class="detail-dept-badge">${escapeHtml(p.createdByDept || "")}</span>
     <div class="detail-title">${escapeHtml(p.title)}</div>
-    <div class="detail-by">Posted by <strong>${escapeHtml(p.createdByName)}</strong></div>
+    <div class="detail-by">Posted by <strong>${escapeHtml(p.createdByName)}</strong> · <span class="post-date">${formatDate(p.createdAt)}</span></div>
     <div class="detail-section-label">Description</div>
     <div class="detail-desc">${escapeHtml(p.description || "")}</div>
     <div class="detail-section-label">Skills Needed</div>
@@ -293,21 +334,25 @@ async function openDetail(postId) {
     <div class="detail-section-label">Team Members (${joinedCount})</div>
     ${membersHTML}
     <div class="detail-actions">
-      ${!isOwner
-        ? `<button class="btn btn-primary detail-join-btn">${isJoined ? "Leave Project" : "Join Project"}</button>`
-        : `<button class="btn btn-ghost" disabled>Your Project</button>`}
+      ${!user
+        ? `<button class="btn btn-primary detail-login-btn">🔒 Login to Join</button>`
+        : !isOwner
+          ? `<button class="btn btn-primary detail-join-btn">${isJoined ? "Leave Project" : "Join Project"}</button>`
+          : `<button class="btn btn-ghost" disabled>Your Project</button>`
+      }
       ${isOwner ? `<button class="btn btn-danger detail-delete-btn">🗑️ Delete Project</button>` : ""}
     </div>`;
 
-  if (!isOwner && user) {
+  if (!user && document.querySelector(".detail-login-btn")) {
+    document.querySelector(".detail-login-btn").onclick = () => { closeDetail(); openAuthModal("login"); };
+  }
+  if (user && !isOwner && document.querySelector(".detail-join-btn")) {
     document.querySelector(".detail-join-btn").onclick = async () => {
       await toggleJoin(postId, user.uid);
       await openDetail(postId);
     };
   }
-  if (isOwner) {
-    document.querySelector(".detail-delete-btn").onclick = () => deletePost(postId);
-  }
+  if (isOwner) document.querySelector(".detail-delete-btn").onclick = () => deletePost(postId);
 
   document.getElementById("detail-modal").classList.remove("hidden");
 }
@@ -360,7 +405,7 @@ async function renderProfile(user) {
           <div class="mini-card-title" data-id="${p.id}">${escapeHtml(p.title)}</div>
           <button class="btn btn-sm btn-danger" data-del="${p.id}">🗑️</button>
         </div>
-        <div class="mini-card-sub">👥 ${(p.joined || []).length} members</div>
+        <div class="mini-card-sub">👥 ${(p.joined || []).length} member${(p.joined || []).length !== 1 ? "s" : ""} · ${formatDate(p.createdAt)}</div>
       </div>`).join("");
 
   profileJoined.innerHTML = joinedPosts.length === 0
@@ -368,19 +413,12 @@ async function renderProfile(user) {
     : joinedPosts.map(p => `
       <div class="mini-card">
         <div class="mini-card-title" data-id="${p.id}">${escapeHtml(p.title)}</div>
-        <div class="mini-card-sub">by ${escapeHtml(p.createdByName)} • ${escapeHtml(p.createdByDept || "")}</div>
+        <div class="mini-card-sub">by ${escapeHtml(p.createdByName)} · ${escapeHtml(p.createdByDept || "")}</div>
       </div>`).join("");
 
-  // Attach events
-  profilePosts.querySelectorAll(".mini-card-title").forEach(el => {
-    el.onclick = () => openDetail(el.dataset.id);
-  });
-  profilePosts.querySelectorAll("[data-del]").forEach(el => {
-    el.onclick = () => deletePost(el.dataset.del);
-  });
-  profileJoined.querySelectorAll(".mini-card-title").forEach(el => {
-    el.onclick = () => openDetail(el.dataset.id);
-  });
+  profilePosts.querySelectorAll(".mini-card-title").forEach(el => el.onclick = () => openDetail(el.dataset.id));
+  profilePosts.querySelectorAll("[data-del]").forEach(el => el.onclick = () => deletePost(el.dataset.del));
+  profileJoined.querySelectorAll(".mini-card-title").forEach(el => el.onclick = () => openDetail(el.dataset.id));
 }
 
 // -------------------- Auth UI --------------------
@@ -389,12 +427,9 @@ function updateAuthUI(user) {
   document.getElementById("btn-show-register").classList.toggle("hidden", !!user);
   document.getElementById("user-nav").classList.toggle("hidden", !user);
   document.getElementById("create-panel").classList.toggle("hidden", !user);
-
   if (user) {
     getDoc(doc(db, "users", user.uid)).then(snap => {
-      if (snap.exists()) {
-        document.getElementById("nav-username").textContent = "👤 " + snap.data().name;
-      }
+      if (snap.exists()) document.getElementById("nav-username").textContent = "👤 " + snap.data().name;
     });
   }
 }
