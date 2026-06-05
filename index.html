@@ -50,7 +50,7 @@
 
   <main>
 
-    <!-- AUTH FORMS -->
+    <!-- AUTH OVERLAY -->
     <div id="auth-overlay" class="hidden">
       <div id="auth-modal">
         <button class="auth-close" id="auth-close-btn">✕</button>
@@ -128,7 +128,7 @@
         </div>
         <div class="form-group">
           <label>Description</label>
-          <textarea id="post-desc" placeholder="What are you building? What problem does it solve? What's the goal?" rows="4"></textarea>
+          <textarea id="post-desc" placeholder="What are you building? What problem does it solve?" rows="4"></textarea>
         </div>
         <div class="form-group">
           <label>Skills Needed <span class="form-hint">comma separated</span></label>
@@ -144,7 +144,14 @@
         <h2>Available Projects</h2>
         <p class="section-sub">Find a project that matches your skills</p>
       </div>
+      <!-- Search -->
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input id="search-input" placeholder="Search by title, skill or name...">
+      </div>
+      <!-- Filter -->
       <div id="dept-filter"></div>
+      <!-- Posts -->
       <div id="posts-list"></div>
     </section>
 
@@ -168,13 +175,16 @@
 
   </main>
 
-  <!-- PROJECT DETAIL MODAL -->
+  <!-- DETAIL MODAL -->
   <div id="detail-modal" class="hidden">
     <div id="detail-content">
       <button id="detail-close">✕</button>
       <div id="detail-body"></div>
     </div>
   </div>
+
+  <!-- SCROLL TO TOP -->
+  <button id="scroll-top" title="Back to top">↑</button>
 
   <!-- TOAST -->
   <div id="toast" class="hidden"></div>
