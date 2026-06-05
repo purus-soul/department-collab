@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CollabHub — University Project Collaboration</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav id="navbar">
+    <div class="nav-brand">
+      <span class="brand-icon">⬡</span>
+      <span class="brand-name">CollabHub</span>
+    </div>
+    <div class="nav-actions">
+      <button id="btn-show-login" class="btn btn-ghost">Login</button>
+      <button id="btn-show-register" class="btn btn-primary">Register</button>
+      <div id="user-nav" class="hidden">
+        <span id="nav-username" class="nav-username"></span>
+        <button id="btn-logout" class="btn btn-ghost">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="hero-badge">🎓 University Collaboration Platform</div>
+      <h1>Build something<br><span class="hero-accent">extraordinary</span><br>together.</h1>
+      <p class="hero-sub">Connect across ECE, CSE, Mech, Bio Medical and more. Post your idea, find your team, ship your project.</p>
+      <div class="hero-stats">
+        <div class="stat"><span id="stat-projects">0</span><label>Projects</label></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span id="stat-members">0</span><label>Members</label></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span>9</span><label>Departments</label></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- AUTH FORMS -->
+    <div id="auth-overlay" class="hidden">
+      <div id="auth-modal">
+        <button class="auth-close" id="auth-close-btn">✕</button>
+
+        <div id="login-form" class="auth-panel hidden">
+          <h2 class="auth-title">Welcome back</h2>
+          <p class="auth-sub">Sign in to your CollabHub account</p>
+          <div class="form-group">
+            <label>Email</label>
+            <input id="login-email" type="email" placeholder="you@university.edu">
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <div class="input-with-icon">
+              <input id="login-pass" type="password" placeholder="••••••••">
+              <span id="toggle-login-pass" class="eye-toggle">👁️</span>
+            </div>
+          </div>
+          <button id="btn-login" class="btn btn-primary btn-full">Sign In</button>
+          <p class="auth-switch">Don't have an account? <a href="#" id="switch-to-register">Register</a></p>
+        </div>
+
+        <div id="register-form" class="auth-panel hidden">
+          <h2 class="auth-title">Join CollabHub</h2>
+          <p class="auth-sub">Create your account and start collaborating</p>
+          <div class="form-group">
+            <label>Full Name</label>
+            <input id="reg-name" placeholder="Your full name">
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input id="reg-email" type="email" placeholder="you@university.edu">
+          </div>
+          <div class="form-group">
+            <label>Department</label>
+            <select id="reg-dept">
+              <option value="">Select your department</option>
+              <option>ECE</option>
+              <option>CSE</option>
+              <option>EEE</option>
+              <option>Mech</option>
+              <option>Bio Medical</option>
+              <option>BBL</option>
+              <option>IT</option>
+              <option>Arts</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Skills <span class="form-hint">comma separated</span></label>
+            <input id="reg-skills" placeholder="e.g. Python, Circuit Design, CAD">
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <div class="input-with-icon">
+              <input id="reg-pass" type="password" placeholder="Min. 6 characters">
+              <span id="toggle-pass" class="eye-toggle">👁️</span>
+            </div>
+          </div>
+          <button id="btn-register" class="btn btn-primary btn-full">Create Account</button>
+          <p class="auth-switch">Already have an account? <a href="#" id="switch-to-login">Sign in</a></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CREATE PROJECT -->
+    <section id="create-panel" class="hidden section-card">
+      <div class="section-header">
+        <h2>Post a Project</h2>
+        <p class="section-sub">Describe your idea and find collaborators</p>
+      </div>
+      <div class="create-form">
+        <div class="form-group">
+          <label>Project Title</label>
+          <input id="post-title" placeholder="Give your project a catchy name">
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="post-desc" placeholder="What are you building? What problem does it solve? What's the goal?" rows="4"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Skills Needed <span class="form-hint">comma separated</span></label>
+          <input id="post-skills" placeholder="e.g. Embedded C, 3D Printing, UI Design">
+        </div>
+        <button id="btn-create" class="btn btn-primary">🚀 Post Project</button>
+      </div>
+    </section>
+
+    <!-- PROJECTS LIST -->
+    <section class="section-card">
+      <div class="section-header">
+        <h2>Available Projects</h2>
+        <p class="section-sub">Find a project that matches your skills</p>
+      </div>
+      <div id="dept-filter"></div>
+      <div id="posts-list"></div>
+    </section>
+
+    <!-- PROFILE -->
+    <section id="profile-section" class="section-card hidden">
+      <div class="section-header">
+        <h2>My Profile</h2>
+      </div>
+      <div id="profile-info" class="profile-card"></div>
+      <div class="profile-projects">
+        <div class="profile-col">
+          <h3>My Projects</h3>
+          <div id="profile-posts"></div>
+        </div>
+        <div class="profile-col">
+          <h3>Joined Projects</h3>
+          <div id="profile-joined"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- PROJECT DETAIL MODAL -->
+  <div id="detail-modal" class="hidden">
+    <div id="detail-content">
+      <button id="detail-close">✕</button>
+      <div id="detail-body"></div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast" class="hidden"></div>
+
+  <footer>
+    <p>CollabHub — Connecting minds across departments ⬡</p>
+  </footer>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>
