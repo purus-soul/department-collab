@@ -21,6 +21,7 @@
       <button id="btn-show-register" class="btn btn-primary">Register</button>
       <div id="user-nav" class="hidden">
         <span id="nav-username" class="nav-username"></span>
+        <button id="btn-admin" class="btn btn-accent hidden">⚙️ Admin</button>
         <button id="btn-logout" class="btn btn-ghost">Logout</button>
       </div>
     </div>
@@ -60,7 +61,7 @@
           <p class="auth-sub">Sign in to your CollabHub account</p>
           <div class="form-group">
             <label>Email</label>
-            <input id="login-email" type="email" placeholder="you@university.edu">
+            <input id="login-email" type="email" placeholder="your@email.com">
           </div>
           <div class="form-group">
             <label>Password</label>
@@ -75,14 +76,29 @@
 
         <div id="register-form" class="auth-panel hidden">
           <h2 class="auth-title">Join CollabHub</h2>
-          <p class="auth-sub">Create your account and start collaborating</p>
+          <p class="auth-sub">Enter your college details to register</p>
           <div class="form-group">
             <label>Full Name</label>
             <input id="reg-name" placeholder="Your full name">
           </div>
           <div class="form-group">
             <label>Email</label>
-            <input id="reg-email" type="email" placeholder="you@university.edu">
+            <input id="reg-email" type="email" placeholder="your@email.com">
+          </div>
+          <div class="form-group">
+            <label>Roll Number</label>
+            <input id="reg-roll" placeholder="e.g. 711521104045" maxlength="20">
+            <div id="roll-hint" class="field-hint"></div>
+          </div>
+          <div class="form-group">
+            <label>Year</label>
+            <select id="reg-year">
+              <option value="">Select year</option>
+              <option>1st Year</option>
+              <option>2nd Year</option>
+              <option>3rd Year</option>
+              <option>4th Year</option>
+            </select>
           </div>
           <div class="form-group">
             <label>Department</label>
@@ -115,6 +131,47 @@
       </div>
     </div>
 
+    <!-- ADMIN DASHBOARD -->
+    <section id="admin-panel" class="hidden section-card admin-section">
+      <div class="section-header">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <h2>⚙️ Admin Dashboard</h2>
+            <p class="section-sub">Manage students and projects across all departments</p>
+          </div>
+          <button id="admin-close" class="btn btn-ghost btn-sm">✕ Close</button>
+        </div>
+      </div>
+      <div class="admin-stats">
+        <div class="admin-stat-card">
+          <div class="admin-stat-num" id="admin-stat-users">0</div>
+          <div class="admin-stat-label">Total Students</div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="admin-stat-num" id="admin-stat-posts">0</div>
+          <div class="admin-stat-label">Total Projects</div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="admin-stat-num" id="admin-stat-joins">0</div>
+          <div class="admin-stat-label">Total Joins</div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="admin-stat-num" id="admin-stat-unverified">0</div>
+          <div class="admin-stat-label">Unverified</div>
+        </div>
+      </div>
+      <div class="admin-tabs">
+        <button class="admin-tab active-tab" data-tab="users">👥 Students</button>
+        <button class="admin-tab" data-tab="projects">📋 Projects</button>
+      </div>
+      <div id="admin-users-tab" class="admin-tab-content">
+        <div id="admin-users-list"></div>
+      </div>
+      <div id="admin-projects-tab" class="admin-tab-content hidden">
+        <div id="admin-projects-list"></div>
+      </div>
+    </section>
+
     <!-- CREATE PROJECT -->
     <section id="create-panel" class="hidden section-card">
       <div class="section-header">
@@ -144,14 +201,11 @@
         <h2>Available Projects</h2>
         <p class="section-sub">Find a project that matches your skills</p>
       </div>
-      <!-- Search -->
       <div class="search-wrap">
         <span class="search-icon">🔍</span>
         <input id="search-input" placeholder="Search by title, skill or name...">
       </div>
-      <!-- Filter -->
       <div id="dept-filter"></div>
-      <!-- Posts -->
       <div id="posts-list"></div>
     </section>
 
