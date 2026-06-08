@@ -526,17 +526,14 @@ async function loadAdminDashboard() {
 }
 
 async function adminVerifyUser(uid, verified) {
-  // Double-check caller is admin
-  const callerSnap = await getDoc(doc(db, "users", auth.currentUser.uid));
-  if (!callerSnap.exists() || callerSnap.data().role !== "admin") {
-    return showToast("Unauthorized.", "error");
-  }
   try {
-    await updateDoc(doc(db, "users", uid), { verified });
+    const userSnap = await getDoc(doc(db, "users", uid));
+    if (!userSnap.exists()) return showToast("User not found.", "error");
+    await setDoc(doc(db, "users", uid), { ...userSnap.data(), verified }, { merge: true });
     showToast(verified ? "Student verified ✅" : "Verification removed", verified ? "success" : "default");
     await loadAdminDashboard();
   } catch (err) {
-    showToast("Failed: " + err.message, "error");
+    showToast("Error: " + err.message, "error");
   }
 }
 
