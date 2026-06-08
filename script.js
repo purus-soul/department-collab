@@ -514,25 +514,28 @@ async function loadAdminDashboard() {
     btn.onclick = () => adminDeletePost(btn.dataset.pid);
   });
 
-  // Tabs
-  document.querySelectorAll(".admin-tab").forEach(tab => {
-    tab.onclick = () => {
-      document.querySelectorAll(".admin-tab").forEach(t => t.classList.remove("active-tab"));
-      tab.classList.add("active-tab");
-      document.getElementById("admin-users-tab").classList.toggle("hidden", tab.dataset.tab !== "users");
-      document.getElementById("admin-projects-tab").classList.toggle("hidden", tab.dataset.tab !== "projects");
-    };
-  });
+  // Tabs — only attach once to avoid overwriting verify button clicks
+  if (!document.getElementById("admin-panel").dataset.tabsReady) {
+    document.getElementById("admin-panel").dataset.tabsReady = "1";
+    document.querySelectorAll(".admin-tab").forEach(tab => {
+      tab.onclick = () => {
+        document.querySelectorAll(".admin-tab").forEach(t => t.classList.remove("active-tab"));
+        tab.classList.add("active-tab");
+        document.getElementById("admin-users-tab").classList.toggle("hidden", tab.dataset.tab !== "users");
+        document.getElementById("admin-projects-tab").classList.toggle("hidden", tab.dataset.tab !== "projects");
+      };
+    });
+  }
 }
 
 async function adminVerifyUser(uid, verified) {
   try {
-    const userSnap = await getDoc(doc(db, "users", uid));
-    if (!userSnap.exists()) return showToast("User not found.", "error");
-    await setDoc(doc(db, "users", uid), { ...userSnap.data(), verified }, { merge: true });
+    // Use setDoc with merge:true — most reliable way to update a single field
+    await setDoc(doc(db, "users", uid), { verified: verified }, { merge: true });
     showToast(verified ? "Student verified ✅" : "Verification removed", verified ? "success" : "default");
     await loadAdminDashboard();
   } catch (err) {
+    alert("Verify error: " + err.message); // visible debug alert
     showToast("Error: " + err.message, "error");
   }
 }
