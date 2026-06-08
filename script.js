@@ -18,7 +18,7 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 // ===================== CONFIGURATION =====================
-const ADMIN_EMAIL = "purusothaman1007@email.com";   // 👈 Change to YOUR email
+const ADMIN_EMAIL = "your@email.com";   // 👈 Change to YOUR email
 // =========================================================
 
 // -------------------- Toast --------------------
@@ -526,26 +526,51 @@ async function loadAdminDashboard() {
 }
 
 async function adminVerifyUser(uid, verified) {
-  await updateDoc(doc(db, "users", uid), { verified });
-  showToast(verified ? "Student verified ✅" : "Verification removed", verified ? "success" : "default");
-  await loadAdminDashboard();
+  // Double-check caller is admin
+  const callerSnap = await getDoc(doc(db, "users", auth.currentUser.uid));
+  if (!callerSnap.exists() || callerSnap.data().role !== "admin") {
+    return showToast("Unauthorized.", "error");
+  }
+  try {
+    await updateDoc(doc(db, "users", uid), { verified });
+    showToast(verified ? "Student verified ✅" : "Verification removed", verified ? "success" : "default");
+    await loadAdminDashboard();
+  } catch (err) {
+    showToast("Failed: " + err.message, "error");
+  }
 }
 
 async function adminDeleteUser(uid) {
+  const callerSnap = await getDoc(doc(db, "users", auth.currentUser.uid));
+  if (!callerSnap.exists() || callerSnap.data().role !== "admin") {
+    return showToast("Unauthorized.", "error");
+  }
   if (!confirm("Remove this student from the database?")) return;
-  await deleteDoc(doc(db, "users", uid));
-  showToast("Student removed.", "default");
-  await loadAdminDashboard();
-  await updateStats();
+  try {
+    await deleteDoc(doc(db, "users", uid));
+    showToast("Student removed.", "default");
+    await loadAdminDashboard();
+    await updateStats();
+  } catch (err) {
+    showToast("Failed: " + err.message, "error");
+  }
 }
 
 async function adminDeletePost(postId) {
+  const callerSnap = await getDoc(doc(db, "users", auth.currentUser.uid));
+  if (!callerSnap.exists() || callerSnap.data().role !== "admin") {
+    return showToast("Unauthorized.", "error");
+  }
   if (!confirm("Delete this project?")) return;
-  await deleteDoc(doc(db, "posts", postId));
-  showToast("Project deleted.", "default");
-  await loadAdminDashboard();
-  await renderPosts(auth.currentUser);
-  await updateStats();
+  try {
+    await deleteDoc(doc(db, "posts", postId));
+    showToast("Project deleted.", "default");
+    await loadAdminDashboard();
+    await renderPosts(auth.currentUser);
+    await updateStats();
+  } catch (err) {
+    showToast("Failed: " + err.message, "error");
+  }
 }
 
 // -------------------- Render Profile --------------------
