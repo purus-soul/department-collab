@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kinship — University Project Collaboration</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -13,39 +14,102 @@
   <!-- NAVBAR -->
   <nav id="navbar">
     <div class="nav-brand">
-      <span class="brand-icon">⬡</span>
+      <div class="brand-mark">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <polygon points="14,2 26,8 26,20 14,26 2,20 2,8" fill="none" stroke="currentColor" stroke-width="1.8"/>
+          <polygon points="14,7 21,11 21,19 14,23 7,19 7,11" fill="currentColor" opacity="0.2"/>
+          <circle cx="14" cy="14" r="3" fill="currentColor"/>
+        </svg>
+      </div>
       <span class="brand-name">Kinship</span>
     </div>
+    <div class="nav-links">
+      <a href="#projects-section" class="nav-link">Projects</a>
+      <a href="#profile-section" class="nav-link" id="nav-profile-link" style="display:none">Profile</a>
+    </div>
     <div class="nav-actions">
-      <button id="btn-show-login" class="btn btn-ghost">Login</button>
-      <button id="btn-show-register" class="btn btn-primary">Register</button>
+      <button id="btn-show-login" class="btn btn-ghost">Sign in</button>
+      <button id="btn-show-register" class="btn btn-primary">Get started</button>
       <div id="user-nav" class="hidden">
+        <div class="nav-avatar" id="nav-avatar">K</div>
         <span id="nav-username" class="nav-username"></span>
-        <button id="btn-admin" class="btn btn-accent hidden">⚙️ Admin</button>
-        <button id="btn-logout" class="btn btn-ghost">Logout</button>
+        <button id="btn-admin" class="btn btn-accent hidden">Admin</button>
+        <button id="btn-logout" class="btn btn-ghost btn-sm">Sign out</button>
       </div>
     </div>
+    <button class="nav-mobile-toggle" id="nav-toggle" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
 
   <!-- HERO -->
   <header id="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-content">
-      <div class="hero-badge">🎓 University Collaboration Platform</div>
-      <h1>Build something<br><span class="hero-accent">extraordinary</span><br>together.</h1>
-      <p class="hero-sub">Connect across ECE, CSE, Mech, Bio Medical and more. Post your idea, find your team, ship your project.</p>
-      <div class="hero-stats">
-        <div class="stat"><span id="stat-projects">0</span><label>Projects</label></div>
-        <div class="stat-divider"></div>
-        <div class="stat"><span id="stat-members">0</span><label>Members</label></div>
-        <div class="stat-divider"></div>
-        <div class="stat"><span>9</span><label>Departments</label></div>
+    <div class="hero-grid-bg"></div>
+    <div class="hero-glow hero-glow-1"></div>
+    <div class="hero-glow hero-glow-2"></div>
+    <div class="hero-glow hero-glow-3"></div>
+
+    <div class="hero-inner">
+      <div class="hero-content">
+        <div class="hero-eyebrow">
+          <span class="eyebrow-dot"></span>
+          University Collaboration Platform
+        </div>
+        <h1 class="hero-headline">
+          Where great<br>
+          <em>projects</em> find<br>
+          their people.
+        </h1>
+        <p class="hero-body">Connect across ECE, CSE, Mech, Bio Medical and more. Post your idea, form your team, and ship something real.</p>
+        <div class="hero-cta">
+          <button id="hero-register-btn" class="btn btn-primary btn-lg">Start a project</button>
+          <button id="hero-browse-btn" class="btn btn-outline btn-lg">Browse projects</button>
+        </div>
+      </div>
+
+      <div class="hero-card-stack">
+        <div class="floating-card fc-1">
+          <div class="fc-dot fc-dot-teal"></div>
+          <div class="fc-text">
+            <span class="fc-label">New project</span>
+            <span class="fc-title">Smart Irrigation System</span>
+          </div>
+          <span class="fc-dept">ECE</span>
+        </div>
+        <div class="floating-card fc-2">
+          <div class="fc-dot fc-dot-violet"></div>
+          <div class="fc-text">
+            <span class="fc-label">3 members joined</span>
+            <span class="fc-title">AI Diagnostic Tool</span>
+          </div>
+          <span class="fc-dept">Bio Med</span>
+        </div>
+        <div class="floating-card fc-3">
+          <div class="fc-dot fc-dot-amber"></div>
+          <div class="fc-text">
+            <span class="fc-label">Looking for team</span>
+            <span class="fc-title">Drone Delivery Prototype</span>
+          </div>
+          <span class="fc-dept">Mech</span>
+        </div>
       </div>
     </div>
-    <div class="hero-visual">
-      <div class="orb orb-1"></div>
-      <div class="orb orb-2"></div>
-      <div class="orb orb-3"></div>
+
+    <div class="hero-stats-bar">
+      <div class="stat-item">
+        <span class="stat-num" id="stat-projects">—</span>
+        <span class="stat-label">Projects posted</span>
+      </div>
+      <div class="stat-sep"></div>
+      <div class="stat-item">
+        <span class="stat-num" id="stat-members">—</span>
+        <span class="stat-label">Students registered</span>
+      </div>
+      <div class="stat-sep"></div>
+      <div class="stat-item">
+        <span class="stat-num">9</span>
+        <span class="stat-label">Departments</span>
+      </div>
     </div>
   </header>
 
@@ -54,55 +118,79 @@
     <!-- AUTH OVERLAY -->
     <div id="auth-overlay" class="hidden">
       <div id="auth-modal">
-        <button class="auth-close" id="auth-close-btn">✕</button>
+        <button class="modal-close" id="auth-close-btn" aria-label="Close">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
 
+        <!-- LOGIN -->
         <div id="login-form" class="auth-panel hidden">
+          <div class="auth-brand-mark">
+            <svg width="32" height="32" viewBox="0 0 28 28" fill="none">
+              <polygon points="14,2 26,8 26,20 14,26 2,20 2,8" fill="none" stroke="#6c3bff" stroke-width="1.8"/>
+              <circle cx="14" cy="14" r="3" fill="#6c3bff"/>
+            </svg>
+          </div>
           <h2 class="auth-title">Welcome back</h2>
           <p class="auth-sub">Sign in to your Kinship account</p>
           <div class="form-group">
-            <label>Email</label>
-            <input id="login-email" type="email" placeholder="your@email.com">
+            <label for="login-email">Email address</label>
+            <input id="login-email" type="email" placeholder="you@university.edu" autocomplete="email">
           </div>
           <div class="form-group">
-            <label>Password</label>
-            <div class="input-with-icon">
-              <input id="login-pass" type="password" placeholder="••••••••">
-              <span id="toggle-login-pass" class="eye-toggle">👁️</span>
+            <label for="login-pass">Password</label>
+            <div class="input-icon-wrap">
+              <input id="login-pass" type="password" placeholder="••••••••" autocomplete="current-password">
+              <button type="button" id="toggle-login-pass" class="eye-btn" aria-label="Toggle password">
+                <svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <svg class="eye-closed hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+              </button>
             </div>
           </div>
-          <button id="btn-login" class="btn btn-primary btn-full">Sign In</button>
-          <p class="auth-switch">Don't have an account? <a href="#" id="switch-to-register">Register</a></p>
+          <button id="btn-login" class="btn btn-primary btn-full btn-lg">Sign in</button>
+          <p class="auth-switch">New to Kinship? <a href="#" id="switch-to-register">Create an account</a></p>
         </div>
 
+        <!-- REGISTER -->
         <div id="register-form" class="auth-panel hidden">
+          <div class="auth-brand-mark">
+            <svg width="32" height="32" viewBox="0 0 28 28" fill="none">
+              <polygon points="14,2 26,8 26,20 14,26 2,20 2,8" fill="none" stroke="#6c3bff" stroke-width="1.8"/>
+              <circle cx="14" cy="14" r="3" fill="#6c3bff"/>
+            </svg>
+          </div>
           <h2 class="auth-title">Join Kinship</h2>
-          <p class="auth-sub">Enter your college details to register</p>
-          <div class="form-group">
-            <label>Full Name</label>
-            <input id="reg-name" placeholder="Your full name">
+          <p class="auth-sub">Your college details to get started</p>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="reg-name">Full name</label>
+              <input id="reg-name" placeholder="Your full name" autocomplete="name">
+            </div>
+            <div class="form-group">
+              <label for="reg-email">Email</label>
+              <input id="reg-email" type="email" placeholder="you@university.edu" autocomplete="email">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="reg-roll">Roll number</label>
+              <input id="reg-roll" placeholder="e.g. 711521104045" maxlength="20" autocomplete="off">
+              <div id="roll-hint" class="field-hint"></div>
+            </div>
+            <div class="form-group">
+              <label for="reg-year">Year</label>
+              <select id="reg-year" autocomplete="off">
+                <option value="">Select year</option>
+                <option>1st Year</option>
+                <option>2nd Year</option>
+                <option>3rd Year</option>
+                <option>4th Year</option>
+              </select>
+            </div>
           </div>
           <div class="form-group">
-            <label>Email</label>
-            <input id="reg-email" type="email" placeholder="your@email.com">
-          </div>
-          <div class="form-group">
-            <label>Roll Number</label>
-            <input id="reg-roll" placeholder="e.g. 711521104045" maxlength="20">
-            <div id="roll-hint" class="field-hint"></div>
-          </div>
-          <div class="form-group">
-            <label>Year</label>
-            <select id="reg-year">
-              <option value="">Select year</option>
-              <option>1st Year</option>
-              <option>2nd Year</option>
-              <option>3rd Year</option>
-              <option>4th Year</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Department</label>
-            <select id="reg-dept">
+            <label for="reg-dept">Department</label>
+            <select id="reg-dept" autocomplete="off">
               <option value="">Select your department</option>
               <option>ECE</option>
               <option>CSE</option>
@@ -115,113 +203,132 @@
             </select>
           </div>
           <div class="form-group">
-            <label>Skills <span class="form-hint">comma separated</span></label>
-            <input id="reg-skills" placeholder="e.g. Python, Circuit Design, CAD">
+            <label for="reg-skills">Skills <span class="label-hint">comma separated</span></label>
+            <input id="reg-skills" placeholder="e.g. Python, Circuit Design, CAD" autocomplete="off">
           </div>
           <div class="form-group">
-            <label>Password</label>
-            <div class="input-with-icon">
-              <input id="reg-pass" type="password" placeholder="Min. 6 characters">
-              <span id="toggle-pass" class="eye-toggle">👁️</span>
+            <label for="reg-pass">Password</label>
+            <div class="input-icon-wrap">
+              <input id="reg-pass" type="password" placeholder="Minimum 6 characters" autocomplete="new-password">
+              <button type="button" id="toggle-pass" class="eye-btn" aria-label="Toggle password">
+                <svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <svg class="eye-closed hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+              </button>
             </div>
           </div>
-          <button id="btn-register" class="btn btn-primary btn-full">Create Account</button>
-          <p class="auth-switch">Already have an account? <a href="#" id="switch-to-login">Sign in</a></p>
+          <button id="btn-register" class="btn btn-primary btn-full btn-lg">Create account</button>
+          <p class="auth-switch">Already a member? <a href="#" id="switch-to-login">Sign in</a></p>
         </div>
       </div>
     </div>
 
     <!-- ADMIN DASHBOARD -->
-    <section id="admin-panel" class="hidden section-card admin-section">
-      <div class="section-header">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div>
-            <h2>⚙️ Admin Dashboard</h2>
-            <p class="section-sub">Manage students and projects across all departments</p>
-          </div>
-          <button id="admin-close" class="btn btn-ghost btn-sm">✕ Close</button>
+    <section id="admin-panel" class="hidden content-section">
+      <div class="section-head">
+        <div class="section-head-left">
+          <div class="section-eyebrow">Admin</div>
+          <h2 class="section-title">Dashboard</h2>
+          <p class="section-desc">Manage students and projects across all departments</p>
+        </div>
+        <button id="admin-close" class="btn btn-ghost btn-sm icon-btn">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          Close
+        </button>
+      </div>
+      <div class="admin-stats-grid">
+        <div class="kpi-card">
+          <div class="kpi-value" id="admin-stat-users">0</div>
+          <div class="kpi-label">Total students</div>
+          <div class="kpi-bar" style="--fill:72%"></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value" id="admin-stat-posts">0</div>
+          <div class="kpi-label">Total projects</div>
+          <div class="kpi-bar" style="--fill:55%"></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value" id="admin-stat-joins">0</div>
+          <div class="kpi-label">Total joins</div>
+          <div class="kpi-bar" style="--fill:40%"></div>
+        </div>
+        <div class="kpi-card kpi-warn">
+          <div class="kpi-value" id="admin-stat-unverified">0</div>
+          <div class="kpi-label">Pending verification</div>
+          <div class="kpi-bar" style="--fill:20%"></div>
         </div>
       </div>
-      <div class="admin-stats">
-        <div class="admin-stat-card">
-          <div class="admin-stat-num" id="admin-stat-users">0</div>
-          <div class="admin-stat-label">Total Students</div>
-        </div>
-        <div class="admin-stat-card">
-          <div class="admin-stat-num" id="admin-stat-posts">0</div>
-          <div class="admin-stat-label">Total Projects</div>
-        </div>
-        <div class="admin-stat-card">
-          <div class="admin-stat-num" id="admin-stat-joins">0</div>
-          <div class="admin-stat-label">Total Joins</div>
-        </div>
-        <div class="admin-stat-card">
-          <div class="admin-stat-num" id="admin-stat-unverified">0</div>
-          <div class="admin-stat-label">Unverified</div>
-        </div>
+      <div class="tab-nav">
+        <button class="tab-btn active-tab" data-tab="users">Students</button>
+        <button class="tab-btn" data-tab="projects">Projects</button>
       </div>
-      <div class="admin-tabs">
-        <button class="admin-tab active-tab" data-tab="users">👥 Students</button>
-        <button class="admin-tab" data-tab="projects">📋 Projects</button>
+      <div id="admin-users-tab" class="tab-panel">
+        <div class="table-hint">Click <strong>Verify</strong> to confirm a student is genuine. Verified students display a badge on their profile.</div>
+        <div id="admin-users-list" class="table-wrap"></div>
       </div>
-      <div id="admin-users-tab" class="admin-tab-content">
-        <div id="admin-users-list"></div>
-      </div>
-      <div id="admin-projects-tab" class="admin-tab-content hidden">
-        <div id="admin-projects-list"></div>
+      <div id="admin-projects-tab" class="tab-panel hidden">
+        <div id="admin-projects-list" class="table-wrap"></div>
       </div>
     </section>
 
     <!-- CREATE PROJECT -->
-    <section id="create-panel" class="hidden section-card">
-      <div class="section-header">
-        <h2>Post a Project</h2>
-        <p class="section-sub">Describe your idea and find collaborators</p>
+    <section id="create-panel" class="hidden content-section" id="post-section">
+      <div class="section-head">
+        <div>
+          <div class="section-eyebrow">New</div>
+          <h2 class="section-title">Post a project</h2>
+          <p class="section-desc">Describe your idea and find collaborators across departments</p>
+        </div>
       </div>
       <div class="create-form">
         <div class="form-group">
-          <label>Project Title</label>
-          <input id="post-title" placeholder="Give your project a catchy name">
+          <label for="post-title">Project title</label>
+          <input id="post-title" placeholder="Give it a clear, memorable name">
         </div>
         <div class="form-group">
-          <label>Description</label>
-          <textarea id="post-desc" placeholder="What are you building? What problem does it solve?" rows="4"></textarea>
+          <label for="post-desc">What are you building?</label>
+          <textarea id="post-desc" placeholder="Describe the problem you're solving and what you plan to build. The more specific, the better teammates you'll attract." rows="4"></textarea>
         </div>
         <div class="form-group">
-          <label>Skills Needed <span class="form-hint">comma separated</span></label>
-          <input id="post-skills" placeholder="e.g. Embedded C, 3D Printing, UI Design">
+          <label for="post-skills">Skills needed <span class="label-hint">comma separated</span></label>
+          <input id="post-skills" placeholder="e.g. Embedded C, 3D Printing, UI Design, Machine Learning">
         </div>
-        <button id="btn-create" class="btn btn-primary">🚀 Post Project</button>
+        <button id="btn-create" class="btn btn-primary btn-lg">Post project</button>
       </div>
     </section>
 
     <!-- PROJECTS LIST -->
-    <section class="section-card">
-      <div class="section-header">
-        <h2>Available Projects</h2>
-        <p class="section-sub">Find a project that matches your skills</p>
+    <section class="content-section" id="projects-section">
+      <div class="section-head">
+        <div>
+          <div class="section-eyebrow">Explore</div>
+          <h2 class="section-title">Available projects</h2>
+          <p class="section-desc">Find a project that matches your skills and interests</p>
+        </div>
       </div>
-      <div class="search-wrap">
-        <span class="search-icon">🔍</span>
-        <input id="search-input" placeholder="Search by title, skill or name...">
+      <div class="search-bar">
+        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="search-input" placeholder="Search by title, skill, or name…" autocomplete="off">
       </div>
-      <div id="dept-filter"></div>
-      <div id="posts-list"></div>
+      <div id="dept-filter" class="chip-row"></div>
+      <div id="posts-list" class="posts-grid"></div>
     </section>
 
     <!-- PROFILE -->
-    <section id="profile-section" class="section-card hidden">
-      <div class="section-header">
-        <h2>My Profile</h2>
+    <section id="profile-section" class="content-section hidden">
+      <div class="section-head">
+        <div>
+          <div class="section-eyebrow">You</div>
+          <h2 class="section-title">Profile</h2>
+        </div>
       </div>
-      <div id="profile-info" class="profile-card"></div>
-      <div class="profile-projects">
+      <div id="profile-info" class="profile-hero"></div>
+      <div class="profile-cols">
         <div class="profile-col">
-          <h3>My Projects</h3>
+          <h3 class="col-title">My projects</h3>
           <div id="profile-posts"></div>
         </div>
         <div class="profile-col">
-          <h3>Joined Projects</h3>
+          <h3 class="col-title">Joined projects</h3>
           <div id="profile-joined"></div>
         </div>
       </div>
@@ -232,21 +339,35 @@
   <!-- DETAIL MODAL -->
   <div id="detail-modal" class="hidden">
     <div id="detail-content">
-      <button id="detail-close">✕</button>
+      <button id="detail-close" class="modal-close" aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
       <div id="detail-body"></div>
     </div>
   </div>
 
-  <!-- SCROLL TO TOP -->
-  <button id="scroll-top" title="Back to top">↑</button>
+  <!-- SCROLL TOP -->
+  <button id="scroll-top" title="Back to top" aria-label="Scroll to top">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+  </button>
 
   <!-- TOAST -->
-  <div id="toast" class="hidden"></div>
+  <div id="toast" class="hidden" role="status" aria-live="polite"></div>
 
   <footer>
-    <p>CollabHub — Connecting minds across departments ⬡</p>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <svg width="20" height="20" viewBox="0 0 28 28" fill="none">
+          <polygon points="14,2 26,8 26,20 14,26 2,20 2,8" fill="none" stroke="currentColor" stroke-width="1.8"/>
+          <circle cx="14" cy="14" r="3" fill="currentColor"/>
+        </svg>
+        <span>Kinship</span>
+      </div>
+      <p>Connecting minds across departments.</p>
+    </div>
   </footer>
 
   <script type="module" src="script.js"></script>
 </body>
 </html>
+
